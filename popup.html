@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Request Filter</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Request Filter</h1>
+    
+    <div class="toggle-container">
+      <label class="switch">
+        <input type="checkbox" id="toggleEnabled">
+        <span class="slider round"></span>
+      </label>
+      <span id="toggleLabel">Enable Filtering</span>
+    </div>
+    
+    <div class="section">
+      <h2>Target Websites</h2>
+      <div class="input-group">
+        <input type="text" id="websiteInput" placeholder="example.com">
+        <button id="addWebsite">Add</button>
+      </div>
+      <ul id="websiteList"></ul>
+    </div>
+    
+    <div class="section">
+      <h2>Blocked Request Patterns</h2>
+      <div class="input-group">
+        <input type="text" id="patternInput" placeholder="api/analytics">
+        <button id="addPattern">Add</button>
+      </div>
+      <ul id="patternList"></ul>
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>
