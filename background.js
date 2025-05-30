@@ -14,25 +14,27 @@ async function updateRules() {
 
     if (filterRules.enabled && filterRules.targetWebsites && filterRules.blockedRequests) {
         const newRules = [];
+        if(filterRules.targetWebsites){
+            // 为每个目标网站和模式创建规则
+            filterRules.targetWebsites.forEach((domain, domainIndex) => {
+                filterRules.blockedRequests.forEach((pattern, patternIndex) => {
+                    const ruleId = domainIndex * 1000 + patternIndex + 1;
+                    currentRuleIds.push(ruleId);
 
-        // 为每个目标网站和模式创建规则
-        filterRules.targetWebsites.forEach((domain, domainIndex) => {
-            filterRules.blockedRequests.forEach((pattern, patternIndex) => {
-                const ruleId = domainIndex * 1000 + patternIndex + 1;
-                currentRuleIds.push(ruleId);
-
-                newRules.push({
-                    id: ruleId,
-                    priority: 1,
-                    action: { type: 'block' },
-                    condition: {
-                        urlFilter: pattern,
-                        domains: [new URL(domain).hostname],
-                        resourceTypes: ['xmlhttprequest']
-                    }
+                    newRules.push({
+                        id: ruleId,
+                        priority: 1,
+                        action: { type: 'block' },
+                        condition: {
+                            urlFilter: pattern,
+                            domains: [new URL(domain).hostname],
+                            resourceTypes: ['xmlhttprequest']
+                        }
+                    });
                 });
             });
-        });
+        }
+
 
         // 添加新规则
         try {
