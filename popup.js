@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 从后台获取当前规则
     chrome.runtime.sendMessage({ action: "getRules" }, (response) => {
-      updateUI(response);
+      updateUI(response || []);
     });
     
     // 更新UI函数
@@ -22,7 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
       
       // 更新网站列表
       websiteList.innerHTML = '';
-      rules.targetWebsites.forEach(site => {
+      if(rules.length>0){
+        rules.targetWebsites.forEach(site => {
         const li = document.createElement('li');
         li.textContent = site;
         const removeBtn = document.createElement('button');
@@ -47,6 +48,8 @@ document.addEventListener('DOMContentLoaded', () => {
         li.appendChild(removeBtn);
         patternList.appendChild(li);
       });
+      }
+      
     }
     
     // 移除项目函数
@@ -70,16 +73,19 @@ document.addEventListener('DOMContentLoaded', () => {
       const site = websiteInput.value.trim();
       if (site) {
         chrome.runtime.sendMessage({ action: "getRules" }, (response) => {
-          if (!response.targetWebsites.includes(site)) {
-            response.targetWebsites.push(site);
-            chrome.runtime.sendMessage({ 
-              action: "updateRules", 
-              rules: response 
-            }, () => {
-              websiteInput.value = '';
-              updateUI(response);
-            });
+          if(response.targetWebsites){
+            if (!response.targetWebsites.includes(site)) {
+              response.targetWebsites.push(site);
+              chrome.runtime.sendMessage({ 
+                action: "updateRules", 
+                rules: response 
+              }, () => {
+                websiteInput.value = '';
+                updateUI(response);
+              });
+            }
           }
+          
         });
       }
     });
@@ -89,16 +95,19 @@ document.addEventListener('DOMContentLoaded', () => {
       const pattern = patternInput.value.trim();
       if (pattern) {
         chrome.runtime.sendMessage({ action: "getRules" }, (response) => {
-          if (!response.blockedRequests.includes(pattern)) {
-            response.blockedRequests.push(pattern);
-            chrome.runtime.sendMessage({ 
-              action: "updateRules", 
-              rules: response 
-            }, () => {
-              patternInput.value = '';
-              updateUI(response);
-            });
+          if(response.blockedRequests){
+            if (!response.blockedRequests.includes(pattern)) {
+              response.blockedRequests.push(pattern);
+              chrome.runtime.sendMessage({ 
+                action: "updateRules", 
+                rules: response 
+              }, () => {
+                patternInput.value = '';
+                updateUI(response);
+              });
+            }
           }
+          
         });
       }
     });
